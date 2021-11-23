@@ -16,9 +16,6 @@
     "logo": "logo_aurea.svg",
     "logo_dark": "logo_aurea_dark.svg",
     "python_version": "2.7",
-    "latest_tested_versions": [
-        "N/A"
-    ],
     "pip_dependencies": {
         "wheel": [
             {
