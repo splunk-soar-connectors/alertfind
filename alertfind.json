@@ -15,6 +15,7 @@
     "min_phantom_version": "5.0.0",
     "logo": "logo_aurea.svg",
     "logo_dark": "logo_aurea_dark.svg",
+    "python_version": "2.7",
     "latest_tested_versions": [
         "N/A"
     ],
@@ -50,7 +51,6 @@
         {
             "action": "test connectivity",
             "description": "Checks authentication with the AlertFind instance",
-            "verbose": "",
             "type": "test",
             "identifier": "test_connectivity",
             "read_only": true,
@@ -60,8 +60,7 @@
         },
         {
             "action": "send notification",
-            "description": "Send notifcation to AlertFind",
-            "verbose": "",
+            "description": "Send notification to AlertFind",
             "type": "generic",
             "identifier": "send_notification",
             "read_only": true,
@@ -96,7 +95,7 @@
                     "order": 3
                 },
                 "max_response_recipients": {
-                    "description": "Maximimum number of recipients allowed to respond with each response",
+                    "description": "Maximum number of recipients allowed to respond with each response",
                     "data_type": "numeric",
                     "required": false,
                     "order": 4
@@ -291,20 +290,20 @@
         },
         {
             "action": "cancel notification",
-            "description": "Cancel the sending of a notifcation",
-            "verbose": "",
+            "description": "Cancel the sending of a notification",
             "type": "generic",
             "identifier": "cancel_notification",
             "read_only": true,
             "parameters": {
                 "notification": {
-                    "description": "ID of notifcaiton to cancel",
+                    "description": "ID of notification to cancel",
                     "primary": true,
                     "data_type": "string",
                     "required": true,
                     "contains": [
                         "alertfind notification"
-                    ]
+                    ],
+                    "order": 0
                 }
             },
             "output": [
@@ -391,8 +390,7 @@
         },
         {
             "action": "notification status",
-            "description": "Check the status of a notifcation",
-            "verbose": "",
+            "description": "Check the status of a notification",
             "type": "investigate",
             "identifier": "notification_status",
             "read_only": true,
@@ -404,7 +402,8 @@
                     "required": true,
                     "contains": [
                         "alertfind notification"
-                    ]
+                    ],
+                    "order": 0
                 }
             },
             "output": [
@@ -548,7 +547,6 @@
         {
             "action": "recipient status",
             "description": "Check the recipient status of a notification",
-            "verbose": "",
             "type": "investigate",
             "identifier": "recipient_status",
             "read_only": true,
@@ -560,7 +558,8 @@
                     "required": true,
                     "contains": [
                         "alertfind notification"
-                    ]
+                    ],
+                    "order": 0
                 }
             },
             "output": [
