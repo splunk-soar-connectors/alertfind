@@ -4,21 +4,21 @@
 # SPLUNK CONFIDENTIAL - Use or disclosure of this material in whole or in part
 # without a valid written license from Splunk Inc. is PROHIBITED.
 
+import sys
+
 # Phantom App imports
 import phantom.app as phantom
-from phantom.base_connector import BaseConnector
+import requests
+import simplejson as json
+import xmltodict
+from defusedxml import ElementTree
+from defusedxml.common import EntitiesForbidden
+from lxml import etree
 from phantom.action_result import ActionResult
+from phantom.base_connector import BaseConnector
 
 # Imports local to this App
 from alertfind_consts import *
-
-from lxml import etree
-from defusedxml import ElementTree
-from defusedxml.common import EntitiesForbidden
-
-import simplejson as json
-import xmltodict
-import requests
 
 
 # Define the App Class
@@ -104,7 +104,8 @@ class AlertFindConnector(BaseConnector):
 
                 if (response.status_code == 500):
 
-                    error = resp_json.get('soapenv:Body', {}).get('soapenv:Fault', {}).get('faultstring', '')  # pylint: disable=E1101
+                    error = resp_json.get(
+                        'soapenv:Body', {}).get('soapenv:Fault', {}).get('faultstring', '')  # pylint: disable=E1101
 
                     if ('PermissionDeniedException' in error):
                         return action_result.set_status(phantom.APP_ERROR, "Authentication with the AlertFind server failed")
@@ -113,7 +114,8 @@ class AlertFindConnector(BaseConnector):
                         return action_result.set_status(phantom.APP_SUCCESS, "Test connectivity passed")
 
                     if (error):
-                        return action_result.set_status(phantom.APP_ERROR, "Call to AlertFind server failed with: {}".format(error))
+                        return action_result.set_status(
+                            phantom.APP_ERROR, "Call to AlertFind server failed with: {}".format(error))
 
                 return action_result.set_status(phantom.APP_ERROR, "Call to AlertFind failed, please see data for error details")
 
@@ -299,8 +301,9 @@ class AlertFindConnector(BaseConnector):
 
 
 def main():
-    import pudb
     import argparse
+
+    import pudb
 
     pudb.set_trace()
 
@@ -309,12 +312,14 @@ def main():
     argparser.add_argument('input_test_json', help='Input Test JSON file')
     argparser.add_argument('-u', '--username', help='username', required=False)
     argparser.add_argument('-p', '--password', help='password', required=False)
+    argparser.add_argument('-v', '--verify', action='store_true', help='verify', required=False, default=False)
 
     args = argparser.parse_args()
     session_id = None
 
     username = args.username
     password = args.password
+    verify = args.verify
 
     if username is not None and password is None:
 
@@ -327,7 +332,7 @@ def main():
             login_url = AlertFindConnector._get_phantom_base_url() + '/login'
 
             print("Accessing the Login page")
-            r = requests.get(login_url, verify=False)
+            r = requests.get(login_url, verify=verify, timeout=60)
             csrftoken = r.cookies['csrftoken']
 
             data = dict()
@@ -340,11 +345,11 @@ def main():
             headers['Referer'] = login_url
 
             print("Logging into Platform to get the session id")
-            r2 = requests.post(login_url, verify=False, data=data, headers=headers)
+            r2 = requests.post(login_url, data=data, verify=verify, headers=headers, timeout=60)
             session_id = r2.cookies['sessionid']
         except Exception as e:
             print("Unable to get session id from the platform. Error: {}".format(str(e)))
-            exit(1)
+            sys.exit()
 
     with open(args.input_test_json) as f:
         in_json = f.read()
@@ -361,7 +366,7 @@ def main():
         ret_val = connector._handle_action(json.dumps(in_json), None)
         print(json.dumps(json.loads(ret_val), indent=4))
 
-    exit(0)
+    sys.exit()
 
 
 if __name__ == '__main__':
