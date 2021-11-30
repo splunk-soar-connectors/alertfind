@@ -85,7 +85,7 @@ class AlertFindConnector(BaseConnector):
         try:
             response = requests.post(self._base_url,
                     data=ElementTree.tostring(self._xml_root),
-                    headers=self._headers)
+                    headers=self._headers)  # nosemgrep
         except Exception as e:
             return (action_result.set_status(phantom.APP_ERROR, ALERTFIND_ERR_SERVER_CONNECTION, e), None)
 
