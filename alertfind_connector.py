@@ -83,9 +83,9 @@ class AlertFindConnector(BaseConnector):
     def _make_soap_call(self, action_result, fail_on_bad_arg=True):
 
         try:
-            response = requests.post(self._base_url,
+            response = requests.post(self._base_url,  # nosemgrep
                     data=ElementTree.tostring(self._xml_root),
-                    headers=self._headers)  # nosemgrep
+                    headers=self._headers)
         except Exception as e:
             return (action_result.set_status(phantom.APP_ERROR, ALERTFIND_ERR_SERVER_CONNECTION, e), None)
 
